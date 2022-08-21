@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** ProductController Class. This class using for control CRUD API Product operation  
+ *
+ * @author Fajar Faruq
+ */
 @RestController
 @RequestMapping("api/v1")
 public class ProductController {
@@ -25,11 +29,21 @@ public class ProductController {
     @Autowired
     private ProductRepository productRepository;
 
+    /**
+     * getAllProduct method. This method using for get all product 
+     * @return List<Product> 
+     */
     @GetMapping("/products")
     public List<Product> getAllProduct() {
         return productRepository.findAll();
     }
 
+    /**
+     * getProductbyId method. This method using for get product by id
+     * @param productId Product id parameter
+     * @return Array of product
+     * @throws ResourceNotFoundException Error not found handler
+     */
     @GetMapping("/products/{id}")
     public ResponseEntity getProductbyId(@PathVariable(value = "id") Long productId) throws ResourceNotFoundException {
         Product product = productRepository.findById(productId).orElseThrow(()
@@ -37,11 +51,23 @@ public class ProductController {
         return ResponseEntity.ok().body(product);
     }
 
+    /**
+     * createProduct method. This method using for create a new product 
+     * @param product The parameter is array of product in payload write with JSON
+     * @return Array of new product
+     */
     @PostMapping("/products")
     public Product createProduct(@RequestBody Product product) {
         return productRepository.save(product);
     }
 
+    /**
+     * updateProduct method. This method using for update an existing product by id
+     * @param productId Product id parameter
+     * @param productDetails Array of product except id in payload write with JSON
+     * @return Array of updated product
+     * @throws ResourceNotFoundException Error not found handler
+     */
     @PutMapping("/products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(value = "id") Long productId,
             @Validated @RequestBody Product productDetails) throws ResourceNotFoundException {
@@ -56,6 +82,12 @@ public class ProductController {
 
     }
 
+    /**
+     * deleteProduct method. This method using for delete a product by id
+     * @param productId This method using for update an existing product by id
+     * @return If success should be return array boolean = true
+     * @throws ResourceNotFoundException Error not found handler
+     */
     @DeleteMapping("/products/{id}")
     public Map<String, Boolean> deleteProduct(@PathVariable(value = "id") Long productId) throws ResourceNotFoundException {
         Product product = productRepository.findById(productId).orElseThrow(()
